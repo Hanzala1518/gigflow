@@ -1,0 +1,199 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { fetchGigs } from '../../store/slices/gigSlice';
+import { fetchMyBids } from '../../store/slices/bidSlice';
+import Spinner from '../../components/common/Spinner';
+import CreateGigModal from '../../components/gigs/CreateGigModal';
+
+export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState('gigs');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { gigs, isLoading: gigsLoading } = useSelector((state) => state.gigs);
+  const { myBids, isLoading: bidsLoading } = useSelector((state) => state.bids);
+
+  // Filter gigs owned by current user
+  const myGigs = gigs.filter((gig) => gig.ownerId?._id === user?.id);
+
+  useEffect(() => {
+    dispatch(fetchGigs());
+    dispatch(fetchMyBids());
+  }, [dispatch]);
+
+  const tabs = [
+    { id: 'gigs', label: 'My Gigs', count: myGigs.length },
+    { id: 'bids', label: 'My Bids', count: myBids.length },
+  ];
+
+  const statusColors = {
+    pending: 'badge-pending',
+    hired: 'badge-hired',
+    rejected: 'badge-rejected',
+    open: 'badge-open',
+    assigned: 'badge-assigned',
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-600 mt-1">Welcome back, {user?.name}!</p>
+      </div>
+
+      {/* Tabs */}
+      <div className="border-b border-gray-200 mb-6">
+        <nav className="-mb-px flex space-x-8">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                activeTab === tab.id
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {tab.label}
+              <span
+                className={`ml-2 py-0.5 px-2 rounded-full text-xs ${
+                  activeTab === tab.id
+                    ? 'bg-primary-100 text-primary-600'
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {tab.count}
+              </span>
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* My Gigs Tab */}
+      {activeTab === 'gigs' && (
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">Gigs You Posted</h2>
+            <button onClick={() => setShowCreateModal(true)} className="btn-primary">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Post a Gig
+            </button>
+          </div>
+
+          {gigsLoading ? (
+            <div className="flex justify-center py-12">
+              <Spinner size="lg" />
+            </div>
+          ) : myGigs.length === 0 ? (
+            <div className="text-center py-12 card">
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                />
+              </svg>
+              <h3 className="mt-2 text-lg font-medium text-gray-900">No gigs posted yet</h3>
+              <p className="mt-1 text-gray-500">Get started by posting your first gig.</p>
+              <button onClick={() => setShowCreateModal(true)} className="btn-primary mt-4">
+                Post a Gig
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {myGigs.map((gig) => (
+                <Link key={gig._id} to={`/gigs/${gig._id}`}>
+                  <div className="card p-5 hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-medium text-gray-900 truncate">
+                          {gig.title}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Budget: ${gig.budget}
+                        </p>
+                      </div>
+                      <span className={statusColors[gig.status]}>
+                        {gig.status.charAt(0).toUpperCase() + gig.status.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* My Bids Tab */}
+      {activeTab === 'bids' && (
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">Bids You Placed</h2>
+
+          {bidsLoading ? (
+            <div className="flex justify-center py-12">
+              <Spinner size="lg" />
+            </div>
+          ) : myBids.length === 0 ? (
+            <div className="text-center py-12 card">
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              <h3 className="mt-2 text-lg font-medium text-gray-900">No bids placed yet</h3>
+              <p className="mt-1 text-gray-500">Browse gigs and start bidding!</p>
+              <Link to="/gigs" className="btn-primary mt-4 inline-block">
+                Browse Gigs
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {myBids.map((bid) => (
+                <Link key={bid._id} to={`/gigs/${bid.gigId?._id}`}>
+                  <div className="card p-5 hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-medium text-gray-900 truncate">
+                          {bid.gigId?.title || 'Unknown Gig'}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Your bid: ${bid.price} • Gig budget: ${bid.gigId?.budget}
+                        </p>
+                      </div>
+                      <span className={statusColors[bid.status]}>
+                        {bid.status.charAt(0).toUpperCase() + bid.status.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Create Gig Modal */}
+      {showCreateModal && <CreateGigModal onClose={() => setShowCreateModal(false)} />}
+    </div>
+  );
+}

@@ -1,0 +1,84 @@
+import { io } from 'socket.io-client';
+
+let socket = null;
+
+/**
+ * Initialize Socket.io connection
+ * Called after user authentication
+ */
+export const initializeSocket = () => {
+  if (socket?.connected) {
+    return socket;
+  }
+
+  // Connect to the backend server
+  // In development, Vite proxy handles the connection
+  // In production, use the actual server URL
+  const serverUrl = import.meta.env.PROD 
+    ? window.location.origin 
+    : 'http://localhost:5000';
+
+  socket = io(serverUrl, {
+    withCredentials: true, // Send cookies for authentication
+    autoConnect: true,
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000,
+  });
+
+  socket.on('connect', () => {
+    console.log('Socket.io connected');
+  });
+
+  socket.on('disconnect', (reason) => {
+    console.log('Socket.io disconnected:', reason);
+  });
+
+  socket.on('connect_error', (error) => {
+    console.error('Socket.io connection error:', error.message);
+  });
+
+  return socket;
+};
+
+/**
+ * Get the current socket instance
+ */
+export const getSocket = () => socket;
+
+/**
+ * Disconnect socket
+ * Called on logout
+ */
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+};
+
+/**
+ * Subscribe to an event
+ */
+export const subscribeToEvent = (event, callback) => {
+  if (socket) {
+    socket.on(event, callback);
+  }
+};
+
+/**
+ * Unsubscribe from an event
+ */
+export const unsubscribeFromEvent = (event, callback) => {
+  if (socket) {
+    socket.off(event, callback);
+  }
+};
+
+export default {
+  initializeSocket,
+  getSocket,
+  disconnectSocket,
+  subscribeToEvent,
+  unsubscribeFromEvent,
+};
