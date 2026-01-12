@@ -9,6 +9,8 @@ const getCorsOptions = () => {
   // Support multiple origins (comma-separated in env)
   const allowedOrigins = origin.split(',').map((o) => o.trim());
 
+  console.log('Allowed CORS origins:', allowedOrigins);
+
   return {
     origin: (requestOrigin, callback) => {
       // Allow requests with no origin (mobile apps, curl, etc.)
@@ -16,9 +18,13 @@ const getCorsOptions = () => {
         return callback(null, true);
       }
 
+      console.log('Request from origin:', requestOrigin);
+
       if (allowedOrigins.includes(requestOrigin)) {
         callback(null, true);
       } else {
+        console.log('Origin rejected:', requestOrigin);
+        console.log('Allowed origins:', allowedOrigins);
         callback(new Error('Not allowed by CORS'));
       }
     },
