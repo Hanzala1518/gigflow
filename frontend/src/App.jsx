@@ -100,7 +100,9 @@ function App() {
 
         {/* Main Layout Routes */}
         <Route path="/" element={<Layout />}>
-          <Route index element={<Navigate to="/gigs" replace />} />
+          <Route index element={
+            isAuthenticated ? <Navigate to="/gigs" replace /> : <Navigate to="/login" replace />
+          } />
           <Route path="gigs" element={<GigFeed />} />
           <Route path="gigs/:id" element={<GigDetail />} />
           <Route
@@ -114,7 +116,9 @@ function App() {
         </Route>
 
         {/* Catch all */}
-        <Route path="*" element={<Navigate to="/gigs" replace />} />
+        <Route path="*" element={
+          isAuthenticated ? <Navigate to="/gigs" replace /> : <Navigate to="/login" replace />
+        } />
       </Routes>
     </BrowserRouter>
   );
