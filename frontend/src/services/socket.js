@@ -11,12 +11,12 @@ export const initializeSocket = () => {
     return socket;
   }
 
-  // Connect to the backend server
-  // In development, Vite proxy handles the connection
-  // In production, use the actual server URL
-  const serverUrl = import.meta.env.PROD 
-    ? window.location.origin 
-    : 'http://localhost:5000';
+  // Connect to the backend server using the same URL as the API
+  // Remove /api suffix if present since Socket.io connects to the root
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const serverUrl = apiUrl.replace(/\/api$/, '');
+
+  console.log('Socket.io connecting to:', serverUrl);
 
   socket = io(serverUrl, {
     withCredentials: true, // Send cookies for authentication

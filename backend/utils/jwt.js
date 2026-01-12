@@ -16,13 +16,15 @@ const generateToken = (userId) => {
  * @returns {Object} Cookie options
  */
 const getCookieOptions = () => {
-  const maxAge = parseInt(process.env.COOKIE_MAX_AGE) || 7 * 24 * 60 * 60 * 1000; // 7 days
-  const isProduction = process.env.NODE_ENV === 'production';
+  const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
 
+  // For cross-origin cookies to work, MUST have:
+  // - secure: true (required for SameSite=None)
+  // - sameSite: 'None' (required for cross-origin)
   return {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? 'None' : 'lax', // Capital 'N' for 'None'
+    secure: true,
+    sameSite: 'None',
     maxAge,
   };
 };

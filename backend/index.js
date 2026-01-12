@@ -19,8 +19,8 @@ connectDB();
 // Get CORS options for Socket.io
 const corsOptions = getCorsOptions();
 
-// Initialize Socket.io
-initializeSocket(server, corsOptions);
+// Initialize Socket.io (no longer needs corsOptions passed)
+initializeSocket(server);
 
 // Middleware
 app.use(configureCors());

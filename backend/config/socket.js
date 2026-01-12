@@ -7,12 +7,15 @@ let io;
 /**
  * Initialize Socket.io server
  * @param {Object} server - HTTP server instance
- * @param {Object} corsOptions - CORS configuration
  */
-const initializeSocket = (server, corsOptions) => {
+const initializeSocket = (server) => {
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  
+  console.log('Socket.io CORS configured for:', frontendUrl);
+
   io = new Server(server, {
     cors: {
-      origin: corsOptions.origin,
+      origin: frontendUrl,
       credentials: true,
     },
   });
