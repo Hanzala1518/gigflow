@@ -72,6 +72,13 @@ const login = catchAsync(async (req, res) => {
   // Generate token and set cookie
   const token = generateToken(user._id);
   setTokenCookie(res, token);
+  
+  console.log('Login successful - Cookie set for user:', user.email);
+  console.log('Cookie options:', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'lax',
+  });
 
   res.status(200).json({
     success: true,
