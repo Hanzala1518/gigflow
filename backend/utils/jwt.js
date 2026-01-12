@@ -17,11 +17,12 @@ const generateToken = (userId) => {
  */
 const getCookieOptions = () => {
   const maxAge = parseInt(process.env.COOKIE_MAX_AGE) || 7 * 24 * 60 * 60 * 1000; // 7 days
+  const isProduction = process.env.NODE_ENV === 'production';
 
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' for cross-domain
+    secure: isProduction,
+    sameSite: isProduction ? 'None' : 'lax', // Capital 'N' for 'None'
     maxAge,
   };
 };

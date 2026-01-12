@@ -8,18 +8,27 @@ const { catchAsync } = require('../utils/catchAsync');
  * Verifies JWT from HttpOnly cookies and attaches user to request
  */
 const authenticate = catchAsync(async (req, res, next) => {
+  // Debug logging
+  console.log('Auth middleware - Cookies:', req.cookies);
+  console.log('Auth middleware - Headers:', req.headers.cookie);
+  
   // Get token from cookies
   const token = req.cookies.token;
 
   if (!token) {
+    console.log('Auth middleware - No token found');
     throw new AppError('Please log in to access this resource', 401);
   }
+
+  console.log('Auth middleware - Token found:', token.substring(0, 20) + '...');
 
   // Verify token
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('Auth middleware - Token verified for user:', decoded.userId);
   } catch (error) {
+    console.log('Auth middleware - Token verification failed:', error.message);
     if (error.name === 'TokenExpiredError') {
       throw new AppError('Your session has expired. Please log in again', 401);
     }
@@ -32,9 +41,12 @@ const authenticate = catchAsync(async (req, res, next) => {
   // Check if user still exists
   const user = await User.findById(decoded.userId);
   if (!user) {
+    console.log('Auth middleware - User not found:', decoded.userId);
     throw new AppError('User no longer exists', 401);
   }
 
+  console.log('Auth middleware - User authenticated:', user.email);
+  
   // Attach user to request
   req.user = user;
   next();
