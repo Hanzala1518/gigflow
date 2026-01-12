@@ -103,8 +103,16 @@ function App() {
           <Route index element={
             isAuthenticated ? <Navigate to="/gigs" replace /> : <Navigate to="/login" replace />
           } />
-          <Route path="gigs" element={<GigFeed />} />
-          <Route path="gigs/:id" element={<GigDetail />} />
+          <Route path="gigs" element={
+            <ProtectedRoute>
+              <GigFeed />
+            </ProtectedRoute>
+          } />
+          <Route path="gigs/:id" element={
+            <ProtectedRoute>
+              <GigDetail />
+            </ProtectedRoute>
+          } />
           <Route
             path="dashboard"
             element={
