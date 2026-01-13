@@ -23,14 +23,8 @@ const initializeSocket = (server) => {
   // Authentication middleware for Socket.io
   io.use((socket, next) => {
     try {
-      // Parse cookies from handshake
-      const cookies = socket.handshake.headers.cookie;
-      if (!cookies) {
-        return next(new Error('Authentication required'));
-      }
-
-      const parsedCookies = cookie.parse(cookies);
-      const token = parsedCookies.token;
+      // Get token from auth query parameter or handshake auth
+      const token = socket.handshake.auth.token || socket.handshake.query.token;
 
       if (!token) {
         return next(new Error('Authentication required'));

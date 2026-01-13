@@ -16,10 +16,15 @@ export const initializeSocket = () => {
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
   const serverUrl = apiUrl.replace(/\/api$/, '');
 
+  // Get JWT token from localStorage
+  const token = localStorage.getItem('gigflow_token');
+
   console.log('Socket.io connecting to:', serverUrl);
 
   socket = io(serverUrl, {
-    withCredentials: true, // Send cookies for authentication
+    auth: {
+      token: token
+    },
     autoConnect: true,
     reconnection: true,
     reconnectionAttempts: 5,

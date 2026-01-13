@@ -69,21 +69,16 @@ const login = catchAsync(async (req, res) => {
     throw new AppError('Invalid credentials', 401);
   }
 
-  // Generate token and set cookie
+  // Generate token and send in response
   const token = generateToken(user._id);
-  setTokenCookie(res, token);
   
-  console.log('Login successful - Cookie set for user:', user.email);
-  console.log('Cookie options:', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'lax',
-  });
+  console.log('Login successful for user:', user.email);
 
   res.status(200).json({
     success: true,
     message: 'Login successful',
     data: {
+      token,
       user: {
         id: user._id,
         name: user.name,
@@ -99,8 +94,7 @@ const login = catchAsync(async (req, res) => {
  * @access  Private
  */
 const logout = catchAsync(async (req, res) => {
-  clearTokenCookie(res);
-
+  // Token is stored on client side, just send success
   res.status(200).json({
     success: true,
     message: 'Logout successful',

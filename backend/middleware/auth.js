@@ -5,21 +5,18 @@ const { catchAsync } = require('../utils/catchAsync');
 
 /**
  * Authentication middleware
- * Verifies JWT from HttpOnly cookies and attaches user to request
+ * Verifies JWT from Authorization header and attaches user to request
  */
 const authenticate = catchAsync(async (req, res, next) => {
-  // Debug logging
-  console.log('Auth middleware - Cookies:', req.cookies);
-  console.log('Auth middleware - Headers:', req.headers.cookie);
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
   
-  // Get token from cookies
-  const token = req.cookies.token;
-
-  if (!token) {
-    console.log('Auth middleware - No token found');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.log('Auth middleware - No Authorization header found');
     throw new AppError('Please log in to access this resource', 401);
   }
 
+  const token = authHeader.substring(7); // Remove 'Bearer ' prefix
   console.log('Auth middleware - Token found:', token.substring(0, 20) + '...');
 
   // Verify token
