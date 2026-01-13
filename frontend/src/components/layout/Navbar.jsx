@@ -22,19 +22,19 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-primary-600">
+            <Link to="/app" className="text-xl font-bold text-primary-600">
               GigFlow
             </Link>
             <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
               <Link
-                to="/gigs"
+                to="/app/gigs"
                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Browse Gigs
               </Link>
               {isAuthenticated && (
                 <Link
-                  to="/dashboard"
+                  to="/app/dashboard"
                   className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Dashboard

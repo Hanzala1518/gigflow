@@ -18,6 +18,7 @@ import { Layout } from './components/layout';
 import { Login, Register } from './pages/auth';
 import { GigFeed, GigDetail } from './pages/gigs';
 import { Dashboard } from './pages/dashboard';
+import LandingPage from './pages/LandingPage';
 
 // Components
 import { ProtectedRoute } from './components/common';
@@ -94,14 +95,19 @@ function App() {
         }}
       />
       <Routes>
+        {/* Public Landing Page */}
+        <Route path="/" element={<LandingPage />} />
+        
         {/* Auth Routes (No Layout) */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Main Layout Routes */}
-        <Route path="/" element={<Layout />}>
+        <Route path="/app" element={<Layout />}>
           <Route index element={
-            isAuthenticated ? <Navigate to="/gigs" replace /> : <Navigate to="/login" replace />
+            <ProtectedRoute>
+              <GigFeed />
+            </ProtectedRoute>
           } />
           <Route path="gigs" element={
             <ProtectedRoute>
@@ -124,9 +130,7 @@ function App() {
         </Route>
 
         {/* Catch all */}
-        <Route path="*" element={
-          isAuthenticated ? <Navigate to="/gigs" replace /> : <Navigate to="/login" replace />
-        } />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
