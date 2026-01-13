@@ -17,8 +17,11 @@ export default function Dashboard() {
   const { gigs, isLoading: gigsLoading } = useSelector((state) => state.gigs);
   const { myBids, isLoading: bidsLoading } = useSelector((state) => state.bids);
 
-  // Filter gigs owned by current user
-  const myGigs = gigs.filter((gig) => gig.ownerId?._id === user?.id);
+  // Filter gigs owned by current user - use String() for proper ID comparison
+  const myGigs = gigs.filter((gig) => {
+    if (!gig.ownerId || !user?.id) return false;
+    return String(gig.ownerId._id || gig.ownerId) === String(user.id);
+  });
 
   useEffect(() => {
     dispatch(fetchGigs());
@@ -151,7 +154,7 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-4">
               {myGigs.map((gig) => (
-                <Link key={gig._id} to={`/gigs/${gig._id}`}>
+                <Link key={gig._id} to={`/app/gigs/${gig._id}`}>
                   <div className="card p-6 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 transition-all border-2 border-transparent hover:border-blue-500/20">
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
