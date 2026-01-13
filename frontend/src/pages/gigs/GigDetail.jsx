@@ -87,20 +87,23 @@ export default function GigDetail() {
       {/* Back Button */}
       <button
         onClick={() => navigate('/gigs')}
-        className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
+        className="flex items-center text-slate-600 hover:text-blue-600 mb-6 font-medium transition-colors group"
       >
-        <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
         Back to Gigs
       </button>
 
       {/* Gig Details */}
-      <div className="card p-6 mb-6">
-        <div className="flex items-start justify-between mb-4">
+      <div className="card p-8 mb-6 shadow-lg">
+        <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{currentGig.title}</h1>
-            <p className="text-gray-500 mt-1">
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">{currentGig.title}</h1>
+            <p className="text-slate-500 flex items-center">
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
               Posted by {currentGig.ownerId?.name || 'Unknown'}
             </p>
           </div>
@@ -109,10 +112,13 @@ export default function GigDetail() {
           </span>
         </div>
 
-        <p className="text-gray-700 whitespace-pre-wrap mb-6">{currentGig.description}</p>
+        <p className="text-slate-700 whitespace-pre-wrap mb-6 leading-relaxed">{currentGig.description}</p>
 
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-          <div className="text-2xl font-bold text-primary-600">${currentGig.budget}</div>
+        <div className="flex items-center justify-between pt-6 border-t-2 border-slate-100">
+          <div>
+            <p className="text-sm text-slate-500 mb-1">Budget</p>
+            <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">${currentGig.budget}</div>
+          </div>
 
           {isAuthenticated && !isOwner && !isAssigned && (
             <button onClick={() => setShowBidModal(true)} className="btn-primary">
@@ -124,17 +130,23 @@ export default function GigDetail() {
 
       {/* Bids Section (Owner Only) */}
       {isOwner && (
-        <div className="card p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="card p-8 shadow-lg">
+          <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+            <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
             Bids ({gigBids.length})
           </h2>
 
           {bidsLoading ? (
-            <div className="flex justify-center py-6">
+            <div className="flex justify-center py-8">
               <Spinner />
             </div>
           ) : gigBids.length === 0 ? (
-            <p className="text-gray-500 text-center py-6">No bids yet</p>
+            <div className="text-center py-12 bg-slate-50 rounded-lg border-2 border-dashed border-slate-200">
+              <p className="text-slate-500 font-medium">No bids yet</p>
+              <p className="text-sm text-slate-400 mt-1">Waiting for freelancers to submit proposals</p>
+            </div>
           ) : (
             <div className="space-y-4">
               {gigBids.map((bid) => (

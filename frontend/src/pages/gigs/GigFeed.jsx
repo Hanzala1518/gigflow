@@ -33,8 +33,8 @@ export default function GigFeed() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Available Gigs</h1>
-          <p className="text-gray-600 mt-1">Find your next project</p>
+          <h1 className="text-3xl font-bold text-slate-900">Available Gigs</h1>
+          <p className="text-slate-600 mt-2">Find your next project opportunity</p>
         </div>
 
         {isAuthenticated && (
@@ -79,9 +79,9 @@ export default function GigFeed() {
           <Spinner size="lg" />
         </div>
       ) : gigs.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="text-center py-16 bg-white rounded-xl shadow-sm border-2 border-dashed border-slate-200">
           <svg
-            className="mx-auto h-12 w-12 text-gray-400"
+            className="mx-auto h-16 w-16 text-blue-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -93,8 +93,8 @@ export default function GigFeed() {
               d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h3 className="mt-2 text-lg font-medium text-gray-900">No gigs found</h3>
-          <p className="mt-1 text-gray-500">
+          <h3 className="mt-4 text-lg font-semibold text-slate-900">No gigs found</h3>
+          <p className="mt-2 text-slate-500">
             {searchTerm ? 'Try a different search term' : 'Be the first to post a gig!'}
           </p>
         </div>

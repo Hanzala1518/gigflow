@@ -40,18 +40,18 @@ export default function Dashboard() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Welcome back, {user?.name}!</p>
+        <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
+        <p className="text-slate-600 mt-2">Welcome back, {user?.name}! 👋</p>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex space-x-8">
+      <div className="border-b-2 border-slate-200 mb-8">
+        <nav className="-mb-0.5 flex space-x-8">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+              className={`py-4 px-1 border-b-2 font-semibold text-sm whitespace-nowrap transition-colors ${
                 activeTab === tab.id
                   ? 'border-primary-500 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -90,9 +90,9 @@ export default function Dashboard() {
               <Spinner size="lg" />
             </div>
           ) : myGigs.length === 0 ? (
-            <div className="text-center py-12 card">
+            <div className="text-center py-16 card border-2 border-dashed border-slate-200">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-16 w-16 text-blue-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -104,8 +104,8 @@ export default function Dashboard() {
                   d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                 />
               </svg>
-              <h3 className="mt-2 text-lg font-medium text-gray-900">No gigs posted yet</h3>
-              <p className="mt-1 text-gray-500">Get started by posting your first gig.</p>
+              <h3 className="mt-4 text-lg font-semibold text-slate-900">No gigs posted yet</h3>
+              <p className="mt-2 text-slate-500">Get started by posting your first gig.</p>
               <button onClick={() => setShowCreateModal(true)} className="btn-primary mt-4">
                 Post a Gig
               </button>
@@ -114,14 +114,14 @@ export default function Dashboard() {
             <div className="space-y-4">
               {myGigs.map((gig) => (
                 <Link key={gig._id} to={`/gigs/${gig._id}`}>
-                  <div className="card p-5 hover:shadow-md transition-shadow">
+                  <div className="card p-6 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 transition-all border-2 border-transparent hover:border-blue-500/20">
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-medium text-gray-900 truncate">
+                        <h3 className="text-lg font-bold text-slate-900 truncate">
                           {gig.title}
                         </h3>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Budget: ${gig.budget}
+                        <p className="text-sm text-slate-500 mt-1 font-medium">
+                          Budget: <span className="text-blue-600 font-bold">${gig.budget}</span>
                         </p>
                       </div>
                       <span className={statusColors[gig.status]}>
@@ -139,16 +139,16 @@ export default function Dashboard() {
       {/* My Bids Tab */}
       {activeTab === 'bids' && (
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Bids You Placed</h2>
+          <h2 className="text-lg font-semibold text-slate-900 mb-6">Bids You Placed</h2>
 
           {bidsLoading ? (
             <div className="flex justify-center py-12">
               <Spinner size="lg" />
             </div>
           ) : myBids.length === 0 ? (
-            <div className="text-center py-12 card">
+            <div className="text-center py-16 card border-2 border-dashed border-slate-200">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-16 w-16 text-blue-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -160,8 +160,8 @@ export default function Dashboard() {
                   d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              <h3 className="mt-2 text-lg font-medium text-gray-900">No bids placed yet</h3>
-              <p className="mt-1 text-gray-500">Browse gigs and start bidding!</p>
+              <h3 className="mt-4 text-lg font-semibold text-slate-900">No bids placed yet</h3>
+              <p className="mt-2 text-slate-500">Browse gigs and start bidding!</p>
               <Link to="/gigs" className="btn-primary mt-4 inline-block">
                 Browse Gigs
               </Link>
@@ -170,14 +170,14 @@ export default function Dashboard() {
             <div className="space-y-4">
               {myBids.map((bid) => (
                 <Link key={bid._id} to={`/gigs/${bid.gigId?._id}`}>
-                  <div className="card p-5 hover:shadow-md transition-shadow">
+                  <div className="card p-6 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 transition-all border-2 border-transparent hover:border-blue-500/20">
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-medium text-gray-900 truncate">
+                        <h3 className="text-lg font-bold text-slate-900 truncate">
                           {bid.gigId?.title || 'Unknown Gig'}
                         </h3>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Your bid: ${bid.price} • Gig budget: ${bid.gigId?.budget}
+                        <p className="text-sm text-slate-500 mt-1">
+                          Your bid: <span className="text-blue-600 font-bold">${bid.price}</span> • Gig budget: <span className="font-semibold">${bid.gigId?.budget}</span>
                         </p>
                       </div>
                       <span className={statusColors[bid.status]}>

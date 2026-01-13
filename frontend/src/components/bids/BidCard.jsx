@@ -8,23 +8,23 @@ export default function BidCard({ bid, isOwner, isAssigned, isHiring, onHire }) 
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
+    <div className="border-2 border-slate-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-500/10 transition-all bg-white">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <h4 className="font-medium text-gray-900">
+          <h4 className="font-bold text-slate-900">
             {bid.freelancerId?.name || 'Unknown Freelancer'}
           </h4>
-          <p className="text-sm text-gray-500">{bid.freelancerId?.email}</p>
+          <p className="text-sm text-slate-500 mt-1">{bid.freelancerId?.email}</p>
         </div>
         <span className={statusColors[bid.status]}>
           {bid.status.charAt(0).toUpperCase() + bid.status.slice(1)}
         </span>
       </div>
 
-      <p className="text-gray-700 mb-4">{bid.message}</p>
+      <p className="text-slate-700 mb-4 leading-relaxed">{bid.message}</p>
 
-      <div className="flex items-center justify-between">
-        <span className="text-lg font-bold text-primary-600">${bid.price}</span>
+      <div className="flex items-center justify-between pt-4 border-t-2 border-slate-100">
+        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">${bid.price}</span>
 
         {isOwner && bid.status === 'pending' && !isAssigned && (
           <button
@@ -37,7 +37,7 @@ export default function BidCard({ bid, isOwner, isAssigned, isHiring, onHire }) 
         )}
 
         {bid.status === 'hired' && (
-          <span className="text-green-600 font-medium flex items-center">
+          <span className="text-emerald-600 font-semibold flex items-center">
             <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"

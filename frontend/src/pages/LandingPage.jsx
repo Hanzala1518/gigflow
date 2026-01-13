@@ -18,8 +18,8 @@ export default function LandingPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       ),
-      title: 'Bank-Grade Security',
-      description: 'Enterprise-level JWT authentication keeps your data safe and encrypted at all times.'
+      title: 'Secure Authentication',
+      description: 'Enterprise-grade JWT authentication ensures your data remains safe and private.'
     },
     {
       icon: (
@@ -75,12 +75,12 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white overflow-hidden">
       {/* Animated background blobs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
         <div className="absolute top-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute -bottom-40 left-1/2 w-80 h-80 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '4s' }} />
+        <div className="absolute -bottom-40 left-1/2 w-80 h-80 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '4s' }} />
       </div>
 
       {/* Hero Section */}
@@ -96,7 +96,7 @@ export default function LandingPage() {
           </div>
 
           {/* Main headline */}
-          <h1 className="text-7xl sm:text-8xl lg:text-9xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 animate-gradient">
+          <h1 className="text-7xl sm:text-8xl lg:text-9xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 animate-gradient">
             GigFlow
           </h1>
 
@@ -116,10 +116,10 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={() => navigate('/login')}
-              className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
+              className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full font-semibold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/50"
             >
               <span className="relative z-10">Get Started Free</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </button>
             
             <button
@@ -144,7 +144,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           {/* Section header */}
           <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
               Powerful Features
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
@@ -157,16 +157,16 @@ export default function LandingPage() {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/20"
+                className="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/10 hover:border-blue-500/50 transition-all duration-300 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20"
               >
                 {/* Glow effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500/0 to-purple-500/0 group-hover:from-cyan-500/10 group-hover:to-purple-500/10 transition-all duration-300" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/10 group-hover:to-cyan-500/10 transition-all duration-300" />
                 
                 <div className="relative z-10">
-                  <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-600/20 text-cyan-400 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 text-cyan-400 mb-4 group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-cyan-400 transition-colors duration-300">
+                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-blue-400 transition-colors duration-300">
                     {feature.title}
                   </h3>
                   <p className="text-gray-300 leading-relaxed">
@@ -184,7 +184,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           {/* Section header */}
           <div className="text-center mb-20">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
               How It Works
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
@@ -195,14 +195,14 @@ export default function LandingPage() {
           {/* Steps */}
           <div className="relative">
             {/* Connection line */}
-            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 -translate-y-1/2" />
+            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 -translate-y-1/2" />
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-8">
               {steps.map((step, index) => (
                 <div key={index} className="relative">
                   <div className="flex flex-col items-center text-center">
                     {/* Number badge */}
-                    <div className="relative z-10 w-24 h-24 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center mb-6 shadow-2xl shadow-purple-500/50 hover:scale-110 transition-transform duration-300">
+                    <div className="relative z-10 w-24 h-24 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/50 hover:scale-110 transition-transform duration-300">
                       <span className="text-3xl font-bold">{step.number}</span>
                     </div>
                     
@@ -222,9 +222,9 @@ export default function LandingPage() {
       {/* Final CTA Section */}
       <section className="relative py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="relative p-12 sm:p-16 rounded-3xl bg-gradient-to-br from-purple-500/20 to-cyan-500/20 backdrop-blur-xl border border-white/20 overflow-hidden">
+          <div className="relative p-12 sm:p-16 rounded-3xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl border border-white/20 overflow-hidden">
             {/* Animated gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 animate-gradient" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-cyan-500/10 to-indigo-500/10 animate-gradient" />
             
             <div className="relative z-10">
               <h2 className="text-4xl sm:text-5xl font-bold mb-6">
@@ -237,7 +237,7 @@ export default function LandingPage() {
               
               <button
                 onClick={() => navigate('/login')}
-                className="group relative px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-bold text-xl overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-purple-500/50"
+                className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full font-bold text-xl overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-blue-500/50"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Launch GigFlow Now
@@ -245,7 +245,7 @@ export default function LandingPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </button>
             </div>
           </div>

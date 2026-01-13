@@ -26,15 +26,15 @@ export default function PlaceBidModal({ gig, onClose, onSubmit }) {
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-full items-center justify-center p-4">
         {/* Backdrop */}
-        <div className="fixed inset-0 bg-black/50" onClick={onClose} />
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={onClose} />
 
         {/* Modal */}
-        <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
+        <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 border border-slate-200">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Place a Bid</h2>
+            <h2 className="text-2xl font-bold text-slate-900">Place a Bid</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-slate-400 hover:text-slate-600 transition-colors p-1 hover:bg-slate-100 rounded-lg"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -47,13 +47,13 @@ export default function PlaceBidModal({ gig, onClose, onSubmit }) {
             </button>
           </div>
 
-          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-600">Bidding on:</p>
-            <p className="font-medium text-gray-900">{gig.title}</p>
-            <p className="text-sm text-gray-500">Budget: ${gig.budget}</p>
+          <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
+            <p className="text-sm text-slate-600 font-medium mb-1">Bidding on:</p>
+            <p className="font-bold text-slate-900">{gig.title}</p>
+            <p className="text-sm text-blue-600 font-semibold mt-1">Budget: ${gig.budget}</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="price" className="label">
                 Your Price ($)
@@ -90,10 +90,10 @@ export default function PlaceBidModal({ gig, onClose, onSubmit }) {
             </div>
 
             <div className="flex gap-3 pt-4">
-              <button type="button" onClick={onClose} className="btn-secondary flex-1">
+              <button type="button" onClick={onClose} className="btn-secondary flex-1 py-3">
                 Cancel
               </button>
-              <button type="submit" disabled={isLoading} className="btn-primary flex-1">
+              <button type="submit" disabled={isLoading} className="btn-primary flex-1 py-3">
                 {isLoading ? <Spinner size="sm" /> : 'Submit Bid'}
               </button>
             </div>
