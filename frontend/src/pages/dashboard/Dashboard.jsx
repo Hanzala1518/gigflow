@@ -207,20 +207,42 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-4">
               {myBids.map((bid) => (
-                <Link key={bid._id} to={`/gigs/${bid.gigId?._id}`}>
+                <Link key={bid._id} to={`/app/gigs/${bid.gigId?._id}`}>
                   <div className="card p-6 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 transition-all border-2 border-transparent hover:border-blue-500/20">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-start justify-between mb-3">
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-slate-900 truncate">
-                          {bid.gigId?.title || 'Unknown Gig'}
-                        </h3>
-                        <p className="text-sm text-slate-500 mt-1">
-                          Your bid: <span className="text-blue-600 font-bold">${bid.price}</span> • Gig budget: <span className="font-semibold">${bid.gigId?.budget}</span>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Gig:</span>
+                          <h3 className="text-lg font-bold text-slate-900 truncate">
+                            {bid.gigId?.title || 'Unknown Gig'}
+                          </h3>
+                        </div>
+                        <p className="text-sm text-slate-600 line-clamp-2 mb-2 leading-relaxed">
+                          {bid.gigId?.description || 'No description available'}
                         </p>
+                        <div className="text-xs text-slate-500 mb-3">
+                          Posted by <span className="font-medium text-slate-700">{bid.gigId?.ownerId?.name || 'Unknown'}</span>
+                        </div>
                       </div>
                       <span className={statusColors[bid.status]}>
                         {bid.status.charAt(0).toUpperCase() + bid.status.slice(1)}
                       </span>
+                    </div>
+                    
+                    <div className="bg-blue-50 rounded-lg p-3 mb-3 border border-blue-100">
+                      <p className="text-xs font-semibold text-slate-600 mb-1">Your Bid Message:</p>
+                      <p className="text-sm text-slate-700 line-clamp-2 leading-relaxed">{bid.message}</p>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-3 border-t-2 border-slate-100">
+                      <div>
+                        <span className="text-sm text-slate-500">Your bid: </span>
+                        <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">${bid.price}</span>
+                      </div>
+                      <div className="text-sm text-slate-500">
+                        <span>Gig budget: </span>
+                        <span className="font-semibold text-slate-700">${bid.gigId?.budget}</span>
+                      </div>
                     </div>
                   </div>
                 </Link>
