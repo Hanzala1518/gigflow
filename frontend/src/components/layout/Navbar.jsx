@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../store/slices/authSlice';
 import toast from 'react-hot-toast';
+import { disconnectSocket } from '../../services';
 
 export default function Navbar() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -10,8 +11,10 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await dispatch(logout());
+    disconnectSocket();
+    localStorage.clear(); // Clear all localStorage
     toast.success('Logged out successfully');
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   return (
