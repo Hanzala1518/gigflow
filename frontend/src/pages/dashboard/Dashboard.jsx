@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchGigs } from '../../store/slices/gigSlice';
-import { fetchMyBids } from '../../store/slices/bidSlice';
+import { fetchMyBids, fetchBidsForGig } from '../../store/slices/bidSlice';
 import Spinner from '../../components/common/Spinner';
 import CreateGigModal from '../../components/gigs/CreateGigModal';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('gigs');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [receivedBids, setReceivedBids] = useState([]);
+  const [isLoadingReceivedBids, setIsLoadingReceivedBids] = useState(false);
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -23,9 +25,45 @@ export default function Dashboard() {
     dispatch(fetchMyBids());
   }, [dispatch]);
 
+  // Fetch all bids for user's gigs when gigs are loaded
+  useEffect(() => {
+    const fetchAllReceivedBids = async () => {
+      if (myGigs.length > 0) {
+        setIsLoadingReceivedBids(true);
+        try {
+          const allBidsPromises = myGigs.map(gig => 
+            dispatch(fetchBidsForGig(gig._id)).unwrap()
+          );
+          const allBidsArrays = await Promise.all(allBidsPromises);
+          
+          // Flatten and combine all bids with their gig info
+          const combinedBids = allBidsArrays.flatMap((bids, index) => 
+            bids.map(bid => ({
+              ...bid,
+              gigInfo: myGigs[index]
+            }))
+          );
+          
+          setReceivedBids(combinedBids);
+        } catch (error) {
+          console.error('Error fetching received bids:', error);
+        } finally {
+          setIsLoadingReceivedBids(false);
+        }
+      } else {
+        setReceivedBids([]);
+      }
+    };
+
+    if (!gigsLoading) {
+      fetchAllReceivedBids();
+    }
+  }, [myGigs.length, gigsLoading, dispatch]);
+
   const tabs = [
     { id: 'gigs', label: 'My Gigs', count: myGigs.length },
     { id: 'bids', label: 'My Bids', count: myBids.length },
+    { id: 'received', label: 'Bids Received', count: receivedBids.length },
   ];
 
   const statusColors = {
@@ -183,6 +221,83 @@ export default function Dashboard() {
                       <span className={statusColors[bid.status]}>
                         {bid.status.charAt(0).toUpperCase() + bid.status.slice(1)}
                       </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Bids Received Tab */}
+      {activeTab === 'received' && (
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900 mb-6">Bids Received on Your Gigs</h2>
+
+          {isLoadingReceivedBids ? (
+            <div className="flex justify-center py-12">
+              <Spinner size="lg" />
+            </div>
+          ) : receivedBids.length === 0 ? (
+            <div className="text-center py-16 card border-2 border-dashed border-slate-200">
+              <svg
+                className="mx-auto h-16 w-16 text-blue-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <h3 className="mt-4 text-lg font-semibold text-slate-900">No bids received yet</h3>
+              <p className="mt-2 text-slate-500">
+                {myGigs.length === 0
+                  ? 'Post a gig to start receiving bids from freelancers.'
+                  : 'Freelancers will submit bids on your posted gigs soon.'}
+              </p>
+              {myGigs.length === 0 && (
+                <button onClick={() => setShowCreateModal(true)} className="btn-primary mt-4">
+                  Post a Gig
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {receivedBids.map((bid) => (
+                <Link key={bid._id} to={`/app/gigs/${bid.gigId}`}>
+                  <div className="card p-6 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 transition-all border-2 border-transparent hover:border-blue-500/20">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">On:</span>
+                          <span className="text-sm font-bold text-slate-900 truncate">{bid.gigInfo?.title}</span>
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900">
+                          {bid.freelancerId?.name || 'Unknown Freelancer'}
+                        </h3>
+                        <p className="text-sm text-slate-500 mt-1">{bid.freelancerId?.email}</p>
+                      </div>
+                      <span className={statusColors[bid.status]}>
+                        {bid.status.charAt(0).toUpperCase() + bid.status.slice(1)}
+                      </span>
+                    </div>
+                    
+                    <p className="text-slate-700 mb-3 line-clamp-2 leading-relaxed">{bid.message}</p>
+                    
+                    <div className="flex items-center justify-between pt-3 border-t-2 border-slate-100">
+                      <div>
+                        <span className="text-sm text-slate-500">Bid amount: </span>
+                        <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">${bid.price}</span>
+                      </div>
+                      <div className="text-sm text-slate-500">
+                        <span>Gig budget: </span>
+                        <span className="font-semibold text-slate-700">${bid.gigInfo?.budget}</span>
+                      </div>
                     </div>
                   </div>
                 </Link>
