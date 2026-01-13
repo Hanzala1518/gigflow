@@ -54,10 +54,11 @@ const authenticate = catchAsync(async (req, res, next) => {
  * Attaches user to request if token exists, but doesn't block if not
  */
 const optionalAuth = catchAsync(async (req, res, next) => {
-  const token = req.cookies.token;
+  const authHeader = req.headers.authorization;
 
-  if (token) {
+  if (authHeader && authHeader.startsWith('Bearer ')) {
     try {
+      const token = authHeader.substring(7);
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const user = await User.findById(decoded.userId);
       if (user) {

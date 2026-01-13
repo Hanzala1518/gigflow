@@ -1,6 +1,5 @@
 const { Server } = require('socket.io');
 const jwt = require('jsonwebtoken');
-const cookie = require('cookie');
 
 let io;
 

@@ -2,10 +2,12 @@ require('dotenv').config();
 
 const http = require('http');
 const express = require('express');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
 const cookieParser = require('cookie-parser');
 const { connectDB, configureCors, getCorsOptions, initializeSocket } = require('./config');
 const { authRoutes, gigRoutes, bidRoutes } = require('./routes');
-const { errorHandler, notFound } = require('./middleware');
+const { errorHandler, notFound, apiLimiter } = require('./middleware');
 
 // Initialize Express app
 const app = express();
@@ -22,19 +24,21 @@ const corsOptions = getCorsOptions();
 // Initialize Socket.io (no longer needs corsOptions passed)
 initializeSocket(server);
 
-// Middleware
+// Security middleware
+app.use(helmet({
+  crossOriginEmbedderPolicy: false, // Needed for Socket.io
+  contentSecurityPolicy: false, // Disable CSP for API
+}));
 app.use(configureCors());
 app.use(express.json({ limit: '10kb' })); // Body parser with size limit
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
-// Security headers
-app.use((req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
-  next();
-});
+// Sanitize data to prevent NoSQL injection
+app.use(mongoSanitize());
+
+// Apply rate limiting to all API routes
+app.use('/api', apiLimiter);
 
 // Root endpoint
 app.get('/', (req, res) => {

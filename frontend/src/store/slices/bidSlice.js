@@ -68,6 +68,7 @@ const bidSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    resetBidState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -133,5 +134,5 @@ const bidSlice = createSlice({
   },
 });
 
-export const { clearGigBids, clearError } = bidSlice.actions;
+export const { clearGigBids, clearError, resetBidState } = bidSlice.actions;
 export default bidSlice.reducer;

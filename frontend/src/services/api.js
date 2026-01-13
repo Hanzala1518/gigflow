@@ -24,12 +24,19 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const status = error.response?.status;
+    
+    // Handle 401 - clear stale token to prevent infinite retry loops
+    if (status === 401) {
+      localStorage.removeItem('gigflow_token');
+    }
+    
     // Extract error message from response
     const message = error.response?.data?.error || error.message || 'An error occurred';
     
     // Create a more useful error object
     const enhancedError = new Error(message);
-    enhancedError.status = error.response?.status;
+    enhancedError.status = status;
     enhancedError.originalError = error;
     
     return Promise.reject(enhancedError);

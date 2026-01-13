@@ -65,6 +65,7 @@ const gigSlice = createSlice({
         state.gigs[gigIndex].status = status;
       }
     },
+    resetGigState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -110,5 +111,5 @@ const gigSlice = createSlice({
   },
 });
 
-export const { clearCurrentGig, clearError, updateGigStatus } = gigSlice.actions;
+export const { clearCurrentGig, clearError, updateGigStatus, resetGigState } = gigSlice.actions;
 export default gigSlice.reducer;

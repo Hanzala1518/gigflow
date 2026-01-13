@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { AppError, catchAsync, generateToken, setTokenCookie, clearTokenCookie } = require('../utils');
+const { AppError, catchAsync, generateToken } = require('../utils');
 
 /**
  * @desc    Register a new user
@@ -27,14 +27,14 @@ const register = catchAsync(async (req, res) => {
     password,
   });
 
-  // Generate token and set cookie
+  // Generate token and send in response (same as login)
   const token = generateToken(user._id);
-  setTokenCookie(res, token);
 
   res.status(201).json({
     success: true,
     message: 'Registration successful',
     data: {
+      token,
       user: {
         id: user._id,
         name: user.name,

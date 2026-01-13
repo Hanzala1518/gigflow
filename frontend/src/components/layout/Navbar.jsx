@@ -1,6 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
+import { logout, resetAuthState } from '../../store/slices/authSlice';
+import { resetGigState } from '../../store/slices/gigSlice';
+import { resetBidState } from '../../store/slices/bidSlice';
 import toast from 'react-hot-toast';
 import { disconnectSocket } from '../../services';
 
@@ -12,7 +14,11 @@ export default function Navbar() {
   const handleLogout = async () => {
     await dispatch(logout());
     disconnectSocket();
-    localStorage.clear();
+    localStorage.removeItem('gigflow_token');
+    // Reset all Redux state to prevent stale data on next login
+    dispatch(resetAuthState());
+    dispatch(resetGigState());
+    dispatch(resetBidState());
     toast.success('Logged out successfully');
     navigate('/login', { replace: true });
   };

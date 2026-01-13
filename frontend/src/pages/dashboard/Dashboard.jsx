@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchGigs } from '../../store/slices/gigSlice';
@@ -17,11 +17,17 @@ export default function Dashboard() {
   const { gigs, isLoading: gigsLoading } = useSelector((state) => state.gigs);
   const { myBids, isLoading: bidsLoading } = useSelector((state) => state.bids);
 
-  // Filter gigs owned by current user - use String() for proper ID comparison
-  const myGigs = gigs.filter((gig) => {
-    if (!gig.ownerId || !user?.id) return false;
-    return String(gig.ownerId._id || gig.ownerId) === String(user.id);
-  });
+  // Memoize myGigs to prevent unnecessary recalculations
+  const myGigs = useMemo(() => {
+    return gigs.filter((gig) => {
+      if (!gig.ownerId || !user?.id) return false;
+      return String(gig.ownerId._id || gig.ownerId) === String(user.id);
+    });
+  }, [gigs, user?.id]);
+
+  // Track if we've already fetched received bids to prevent duplicate requests
+  const hasFetchedReceivedBids = useRef(false);
+  const lastMyGigsIds = useRef('');
 
   useEffect(() => {
     dispatch(fetchGigs());
@@ -30,9 +36,20 @@ export default function Dashboard() {
 
   // Fetch all bids for user's gigs when gigs are loaded
   useEffect(() => {
+    // Create a stable identifier for current myGigs
+    const currentMyGigsIds = myGigs.map(g => g._id).sort().join(',');
+    
+    // Skip if same gigs or already loading
+    if (currentMyGigsIds === lastMyGigsIds.current && hasFetchedReceivedBids.current) {
+      return;
+    }
+
     const fetchAllReceivedBids = async () => {
       if (myGigs.length > 0) {
         setIsLoadingReceivedBids(true);
+        hasFetchedReceivedBids.current = true;
+        lastMyGigsIds.current = currentMyGigsIds;
+        
         try {
           const allBidsPromises = myGigs.map(gig => 
             dispatch(fetchBidsForGig(gig._id)).unwrap()
@@ -55,13 +72,14 @@ export default function Dashboard() {
         }
       } else {
         setReceivedBids([]);
+        lastMyGigsIds.current = '';
       }
     };
 
     if (!gigsLoading) {
       fetchAllReceivedBids();
     }
-  }, [myGigs.length, gigsLoading, dispatch]);
+  }, [myGigs, gigsLoading, dispatch]);
 
   const tabs = [
     { id: 'gigs', label: 'My Gigs', count: myGigs.length },
@@ -203,7 +221,7 @@ export default function Dashboard() {
               </svg>
               <h3 className="mt-4 text-lg font-semibold text-slate-900">No bids placed yet</h3>
               <p className="mt-2 text-slate-500">Browse gigs and start bidding!</p>
-              <Link to="/gigs" className="btn-primary mt-4 inline-block">
+              <Link to="/app/gigs" className="btn-primary mt-4 inline-block">
                 Browse Gigs
               </Link>
             </div>

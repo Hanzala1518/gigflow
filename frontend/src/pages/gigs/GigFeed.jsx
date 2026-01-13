@@ -101,7 +101,7 @@ export default function GigFeed() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {gigs.map((gig) => (
-            <Link key={gig._id} to={`/gigs/${gig._id}`}>
+            <Link key={gig._id} to={`/app/gigs/${gig._id}`}>
               <GigCard gig={gig} />
             </Link>
           ))}
