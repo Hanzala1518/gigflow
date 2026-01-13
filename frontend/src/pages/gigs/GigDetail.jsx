@@ -75,7 +75,7 @@ export default function GigDetail() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 text-center">
         <h2 className="text-xl font-semibold text-gray-900">Gig not found</h2>
-        <button onClick={() => navigate('/gigs')} className="btn-primary mt-4">
+        <button onClick={() => navigate('/app/gigs')} className="btn-primary mt-4">
           Back to Gigs
         </button>
       </div>
@@ -86,7 +86,7 @@ export default function GigDetail() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Back Button */}
       <button
-        onClick={() => navigate('/gigs')}
+        onClick={() => navigate('/app/gigs')}
         className="flex items-center text-slate-600 hover:text-blue-600 mb-6 font-medium transition-colors group"
       >
         <svg className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
