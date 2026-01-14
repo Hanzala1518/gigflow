@@ -162,7 +162,7 @@ export default function Dashboard() {
               </button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {myGigs.map((gig) => (
                 <Link key={gig._id} to={`/app/gigs/${gig._id}`}>
                   <div className="card p-6 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 transition-all border-2 border-transparent hover:border-blue-500/20">
@@ -172,7 +172,7 @@ export default function Dashboard() {
                           {gig.title}
                         </h3>
                         <p className="text-sm text-slate-500 mt-1 font-medium">
-                          Budget: <span className="text-blue-600 font-bold">${gig.budget}</span>
+                          Budget: <span className="text-blue-600 font-bold">₹{gig.budget}</span>
                         </p>
                       </div>
                       <span className={statusColors[gig.status]}>
@@ -258,11 +258,11 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between pt-3 border-t-2 border-slate-100">
                       <div>
                         <span className="text-sm text-slate-500">Your bid: </span>
-                        <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">${bid.price}</span>
+                        <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">₹{bid.price}</span>
                       </div>
                       <div className="text-sm text-slate-500">
                         <span>Gig budget: </span>
-                        <span className="font-semibold text-slate-700">${bid.gigId?.budget}</span>
+                        <span className="font-semibold text-slate-700">₹{bid.gigId?.budget}</span>
                       </div>
                     </div>
                   </div>
@@ -335,11 +335,11 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between pt-3 border-t-2 border-slate-100">
                       <div>
                         <span className="text-sm text-slate-500">Bid amount: </span>
-                        <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">${bid.price}</span>
+                        <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">₹{bid.price}</span>
                       </div>
                       <div className="text-sm text-slate-500">
                         <span>Gig budget: </span>
-                        <span className="font-semibold text-slate-700">${bid.gigInfo?.budget}</span>
+                        <span className="font-semibold text-slate-700">₹{bid.gigInfo?.budget}</span>
                       </div>
                     </div>
                   </div>

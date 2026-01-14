@@ -11,7 +11,7 @@ export default function GigCard({ gig }) {
       <p className="text-slate-600 text-sm line-clamp-3 flex-grow mb-4">{gig.description}</p>
 
       <div className="flex items-center justify-between pt-4 border-t-2 border-slate-100 group-hover:border-blue-100 transition-colors">
-        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">${gig.budget}</span>
+        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">₹{gig.budget}</span>
         <span className="text-sm text-slate-500 font-medium">
           by {gig.ownerId?.name || 'Unknown'}
         </span>
