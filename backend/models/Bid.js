@@ -32,6 +32,16 @@ const bidSchema = new mongoose.Schema(
       },
       default: 'pending',
     },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      maxlength: [500, 'Rejection reason cannot exceed 500 characters'],
+      default: null,
+    },
+    rejectedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

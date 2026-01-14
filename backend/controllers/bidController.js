@@ -247,9 +247,107 @@ const hireBid = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * @desc    Reject a bid with optional rejection message
+ * @route   PATCH /api/bids/:bidId/reject
+ * @access  Private (Gig owner only)
+ */
+const rejectBid = catchAsync(async (req, res) => {
+  const { bidId } = req.params;
+  const { rejectionReason } = req.body;
+
+  // Validate bidId format
+  if (!isValidObjectId(bidId)) {
+    throw new AppError('Invalid bid ID', 400);
+  }
+
+  // Validate rejectionReason if provided
+  if (rejectionReason !== undefined) {
+    if (typeof rejectionReason !== 'string') {
+      throw new AppError('Rejection reason must be a string', 400);
+    }
+    if (rejectionReason.length > 500) {
+      throw new AppError('Rejection reason cannot exceed 500 characters', 400);
+    }
+  }
+
+  // Fetch the bid
+  const bid = await Bid.findById(bidId);
+  
+  if (!bid) {
+    throw new AppError('Bid not found', 404);
+  }
+
+  // Check if bid is still pending
+  if (bid.status !== 'pending') {
+    throw new AppError(`Cannot reject a bid that has already been ${bid.status}`, 400);
+  }
+
+  // Fetch the associated gig
+  const gig = await Gig.findById(bid.gigId);
+  
+  if (!gig) {
+    throw new AppError('Gig not found', 404);
+  }
+
+  // Authorization: Only the gig owner can reject
+  if (gig.ownerId.toString() !== req.user._id.toString()) {
+    throw new AppError('Only the gig owner can reject bids for this gig', 403);
+  }
+
+  // Verify gig is still open (can't reject if already assigned)
+  if (gig.status !== 'open') {
+    throw new AppError('Cannot reject bids for a gig that is already assigned', 400);
+  }
+
+  // Atomically update the bid to "rejected" (only if still "pending")
+  const updateData = {
+    status: 'rejected',
+    rejectedAt: new Date(),
+  };
+
+  // Only set rejectionReason if provided and not empty
+  if (rejectionReason && rejectionReason.trim()) {
+    updateData.rejectionReason = rejectionReason.trim();
+  }
+
+  const updatedBid = await Bid.findOneAndUpdate(
+    { _id: bidId, status: 'pending' },
+    updateData,
+    { new: true }
+  );
+
+  if (!updatedBid) {
+    throw new AppError('Bid was already processed', 409);
+  }
+
+  // Populate for response
+  await updatedBid.populate('freelancerId', 'name email');
+  await updatedBid.populate('gigId', 'title status');
+
+  // Send notification to the rejected freelancer via Socket.io
+  const freelancerId = bid.freelancerId.toString();
+  emitToUser(freelancerId, 'bid-rejected', {
+    message: `Your bid for "${gig.title}" has been rejected`,
+    gigId: gig._id,
+    gigTitle: gig.title,
+    bidId: bidId,
+    rejectionReason: updateData.rejectionReason || null,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: 'Bid rejected successfully',
+    data: {
+      bid: updatedBid,
+    },
+  });
+});
+
 module.exports = {
   createBid,
   getBidsForGig,
   getMyBids,
   hireBid,
+  rejectBid,
 };

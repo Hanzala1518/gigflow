@@ -97,8 +97,28 @@ const getGigById = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * @desc    Get all gigs owned by the current user
+ * @route   GET /api/gigs/my-gigs
+ * @access  Private
+ */
+const getMyGigs = catchAsync(async (req, res) => {
+  const gigs = await Gig.find({ ownerId: req.user._id })
+    .populate('ownerId', 'name email')
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: gigs.length,
+    data: {
+      gigs,
+    },
+  });
+});
+
 module.exports = {
   getGigs,
   createGig,
   getGigById,
+  getMyGigs,
 };

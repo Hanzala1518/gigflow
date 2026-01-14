@@ -12,8 +12,11 @@ router.get('/my-bids', bidController.getMyBids);
 // Create a new bid (with rate limiting to prevent spam)
 router.post('/', bidLimiter, bidController.createBid);
 
-// Hire a freelancer (gig owner only) - uses MongoDB transactions
+// Hire a freelancer (gig owner only) - uses optimistic locking
 router.patch('/:bidId/hire', bidController.hireBid);
+
+// Reject a bid with optional message (gig owner only)
+router.patch('/:bidId/reject', bidController.rejectBid);
 
 // Get all bids for a specific gig (owner only)
 router.get('/:gigId', bidController.getBidsForGig);

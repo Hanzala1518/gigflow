@@ -50,11 +50,24 @@ export const hireBid = createAsyncThunk(
   }
 );
 
+export const rejectBid = createAsyncThunk(
+  'bids/rejectBid',
+  async ({ bidId, rejectionReason }, { rejectWithValue }) => {
+    try {
+      const data = await bidService.rejectBid(bidId, rejectionReason);
+      return data.data.bid;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   gigBids: [], // Bids for a specific gig (owner view)
   myBids: [], // Bids placed by current user (freelancer view)
   isLoading: false,
   isHiring: false,
+  isRejecting: false,
   error: null,
 };
 
@@ -129,6 +142,25 @@ const bidSlice = createSlice({
       })
       .addCase(hireBid.rejected, (state, action) => {
         state.isHiring = false;
+        state.error = action.payload;
+      })
+      // Reject Bid
+      .addCase(rejectBid.pending, (state) => {
+        state.isRejecting = true;
+        state.error = null;
+      })
+      .addCase(rejectBid.fulfilled, (state, action) => {
+        state.isRejecting = false;
+        // Update the rejected bid in gigBids
+        const rejectedBidId = action.payload._id;
+        state.gigBids = state.gigBids.map((bid) =>
+          bid._id === rejectedBidId
+            ? { ...bid, status: 'rejected', rejectionReason: action.payload.rejectionReason, rejectedAt: action.payload.rejectedAt }
+            : bid
+        );
+      })
+      .addCase(rejectBid.rejected, (state, action) => {
+        state.isRejecting = false;
         state.error = action.payload;
       });
   },

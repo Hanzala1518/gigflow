@@ -20,6 +20,12 @@ const bidService = {
     const response = await api.patch(`/bids/${bidId}/hire`);
     return response.data;
   },
+
+  rejectBid: async (bidId, rejectionReason = null) => {
+    const payload = rejectionReason ? { rejectionReason } : {};
+    const response = await api.patch(`/bids/${bidId}/reject`, payload);
+    return response.data;
+  },
 };
 
 export default bidService;

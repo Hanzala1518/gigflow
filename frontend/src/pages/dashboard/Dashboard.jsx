@@ -1,7 +1,7 @@
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchGigs } from '../../store/slices/gigSlice';
+import { fetchMyGigs } from '../../store/slices/gigSlice';
 import { fetchMyBids, fetchBidsForGig } from '../../store/slices/bidSlice';
 import Spinner from '../../components/common/Spinner';
 import CreateGigModal from '../../components/gigs/CreateGigModal';
@@ -14,23 +14,15 @@ export default function Dashboard() {
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { gigs, isLoading: gigsLoading } = useSelector((state) => state.gigs);
+  const { myGigs, isLoadingMyGigs } = useSelector((state) => state.gigs);
   const { myBids, isLoading: bidsLoading } = useSelector((state) => state.bids);
-
-  // Memoize myGigs to prevent unnecessary recalculations
-  const myGigs = useMemo(() => {
-    return gigs.filter((gig) => {
-      if (!gig.ownerId || !user?.id) return false;
-      return String(gig.ownerId._id || gig.ownerId) === String(user.id);
-    });
-  }, [gigs, user?.id]);
 
   // Track if we've already fetched received bids to prevent duplicate requests
   const hasFetchedReceivedBids = useRef(false);
   const lastMyGigsIds = useRef('');
 
   useEffect(() => {
-    dispatch(fetchGigs());
+    dispatch(fetchMyGigs());
     dispatch(fetchMyBids());
   }, [dispatch]);
 
@@ -76,10 +68,10 @@ export default function Dashboard() {
       }
     };
 
-    if (!gigsLoading) {
+    if (!isLoadingMyGigs) {
       fetchAllReceivedBids();
     }
-  }, [myGigs, gigsLoading, dispatch]);
+  }, [myGigs, isLoadingMyGigs, dispatch]);
 
   const tabs = [
     { id: 'gigs', label: 'My Gigs', count: myGigs.length },
@@ -144,7 +136,7 @@ export default function Dashboard() {
             </button>
           </div>
 
-          {gigsLoading ? (
+          {isLoadingMyGigs ? (
             <div className="flex justify-center py-12">
               <Spinner size="lg" />
             </div>
@@ -254,6 +246,14 @@ export default function Dashboard() {
                       <p className="text-xs font-semibold text-slate-600 mb-1">Your Bid Message:</p>
                       <p className="text-sm text-slate-700 line-clamp-2 leading-relaxed">{bid.message}</p>
                     </div>
+
+                    {/* Show rejection reason if rejected */}
+                    {bid.status === 'rejected' && bid.rejectionReason && (
+                      <div className="bg-red-50 rounded-lg p-3 mb-3 border border-red-200">
+                        <p className="text-xs font-semibold text-red-700 mb-1">Rejection Reason:</p>
+                        <p className="text-sm text-red-600 line-clamp-2 leading-relaxed">{bid.rejectionReason}</p>
+                      </div>
+                    )}
                     
                     <div className="flex items-center justify-between pt-3 border-t-2 border-slate-100">
                       <div>

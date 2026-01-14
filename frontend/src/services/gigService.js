@@ -16,6 +16,11 @@ const gigService = {
     const response = await api.post('/gigs', gigData);
     return response.data;
   },
+
+  getMyGigs: async () => {
+    const response = await api.get('/gigs/my-gigs');
+    return response.data;
+  },
 };
 
 export default gigService;

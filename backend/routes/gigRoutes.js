@@ -5,9 +5,12 @@ const { authenticate } = require('../middleware');
 
 // Public routes
 router.get('/', gigController.getGigs);
-router.get('/:id', gigController.getGigById);
 
-// Protected routes
+// Protected routes (must come before /:id to prevent route conflicts)
+router.get('/my-gigs', authenticate, gigController.getMyGigs);
 router.post('/', authenticate, gigController.createGig);
+
+// Public route with param (must come after named routes)
+router.get('/:id', gigController.getGigById);
 
 module.exports = router;

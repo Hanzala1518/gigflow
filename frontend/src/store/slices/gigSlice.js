@@ -38,10 +38,24 @@ export const createGig = createAsyncThunk(
   }
 );
 
+export const fetchMyGigs = createAsyncThunk(
+  'gigs/fetchMyGigs',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await gigService.getMyGigs();
+      return data.data.gigs;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   gigs: [],
+  myGigs: [], // Gigs created by the current user
   currentGig: null,
   isLoading: false,
+  isLoadingMyGigs: false,
   error: null,
 };
 
@@ -63,6 +77,11 @@ const gigSlice = createSlice({
       const gigIndex = state.gigs.findIndex((g) => g._id === gigId);
       if (gigIndex !== -1) {
         state.gigs[gigIndex].status = status;
+      }
+      // Also update in myGigs
+      const myGigIndex = state.myGigs.findIndex((g) => g._id === gigId);
+      if (myGigIndex !== -1) {
+        state.myGigs[myGigIndex].status = status;
       }
     },
     resetGigState: () => initialState,
@@ -103,9 +122,23 @@ const gigSlice = createSlice({
       .addCase(createGig.fulfilled, (state, action) => {
         state.isLoading = false;
         state.gigs.unshift(action.payload);
+        state.myGigs.unshift(action.payload); // Also add to myGigs
       })
       .addCase(createGig.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.payload;
+      })
+      // Fetch My Gigs
+      .addCase(fetchMyGigs.pending, (state) => {
+        state.isLoadingMyGigs = true;
+        state.error = null;
+      })
+      .addCase(fetchMyGigs.fulfilled, (state, action) => {
+        state.isLoadingMyGigs = false;
+        state.myGigs = action.payload;
+      })
+      .addCase(fetchMyGigs.rejected, (state, action) => {
+        state.isLoadingMyGigs = false;
         state.error = action.payload;
       });
   },

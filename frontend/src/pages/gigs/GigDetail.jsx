@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchGigById, clearCurrentGig, updateGigStatus } from '../../store/slices/gigSlice';
-import { fetchBidsForGig, createBid, hireBid, clearGigBids } from '../../store/slices/bidSlice';
+import { fetchBidsForGig, createBid, hireBid, rejectBid, clearGigBids } from '../../store/slices/bidSlice';
 import toast from 'react-hot-toast';
 import Spinner from '../../components/common/Spinner';
 import BidCard from '../../components/bids/BidCard';
 import PlaceBidModal from '../../components/bids/PlaceBidModal';
+import RejectBidModal from '../../components/bids/RejectBidModal';
 
 export default function GigDetail() {
   const { id } = useParams();
@@ -14,9 +15,11 @@ export default function GigDetail() {
   const dispatch = useDispatch();
 
   const [showBidModal, setShowBidModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [selectedBidForReject, setSelectedBidForReject] = useState(null);
 
   const { currentGig, isLoading: gigLoading } = useSelector((state) => state.gigs);
-  const { gigBids, isLoading: bidsLoading, isHiring } = useSelector((state) => state.bids);
+  const { gigBids, isLoading: bidsLoading, isHiring, isRejecting } = useSelector((state) => state.bids);
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
   // Compare using string conversion to handle ObjectId comparison
@@ -50,6 +53,28 @@ export default function GigDetail() {
       dispatch(updateGigStatus({ gigId: id, status: 'assigned' }));
     } else {
       toast.error(result.payload || 'Failed to hire');
+    }
+  };
+
+  const handleOpenRejectModal = (bid) => {
+    setSelectedBidForReject(bid);
+    setShowRejectModal(true);
+  };
+
+  const handleReject = async (rejectionReason) => {
+    if (!selectedBidForReject) return;
+
+    const result = await dispatch(rejectBid({ 
+      bidId: selectedBidForReject._id, 
+      rejectionReason 
+    }));
+    
+    if (rejectBid.fulfilled.match(result)) {
+      toast.success('Bid rejected successfully');
+      setShowRejectModal(false);
+      setSelectedBidForReject(null);
+    } else {
+      toast.error(result.payload || 'Failed to reject bid');
     }
   };
 
@@ -156,7 +181,9 @@ export default function GigDetail() {
                   isOwner={true}
                   isAssigned={isAssigned}
                   isHiring={isHiring}
+                  isRejecting={isRejecting}
                   onHire={() => handleHire(bid._id)}
+                  onReject={() => handleOpenRejectModal(bid)}
                 />
               ))}
             </div>
@@ -170,6 +197,19 @@ export default function GigDetail() {
           gig={currentGig}
           onClose={() => setShowBidModal(false)}
           onSubmit={handlePlaceBid}
+        />
+      )}
+
+      {/* Reject Bid Modal */}
+      {showRejectModal && selectedBidForReject && (
+        <RejectBidModal
+          bid={selectedBidForReject}
+          onClose={() => {
+            setShowRejectModal(false);
+            setSelectedBidForReject(null);
+          }}
+          onSubmit={handleReject}
+          isSubmitting={isRejecting}
         />
       )}
     </div>
