@@ -78,7 +78,7 @@ export default function PlaceBidModal({ gig, onClose, onSubmit }) {
           <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
             <p className="text-sm text-slate-600 font-medium mb-1">Bidding on:</p>
             <p className="font-bold text-slate-900">{gig.title}</p>
-            <p className="text-sm text-blue-600 font-semibold mt-1">Budget: ₹{gig.budget}</p>
+            <p className="text-sm text-blue-600 font-semibold mt-1">Budget: ${gig.budget}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">

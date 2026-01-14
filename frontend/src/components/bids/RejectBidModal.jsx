@@ -53,7 +53,7 @@ export default function RejectBidModal({ bid, onClose, onSubmit, isSubmitting })
                 Rejecting bid from <span className="font-semibold text-slate-900">{bid.freelancerId?.name}</span>
               </p>
               <p className="text-sm text-slate-500 mt-1">
-                Bid amount: <span className="font-semibold text-blue-600">₹{bid.price}</span>
+                Bid amount: <span className="font-semibold text-blue-600">${bid.price}</span>
               </p>
             </div>
 

@@ -142,7 +142,7 @@ export default function GigDetail() {
         <div className="flex items-center justify-between pt-6 border-t-2 border-slate-100">
           <div>
             <p className="text-sm text-slate-500 mb-1">Budget</p>
-            <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">₹{currentGig.budget}</div>
+            <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">${currentGig.budget}</div>
           </div>
 
           {isAuthenticated && !isOwner && !isAssigned && (

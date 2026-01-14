@@ -1,18 +1,18 @@
 export default function GigCard({ gig }) {
   return (
-    <div className="group card p-6 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer h-full flex flex-col border-2 border-transparent hover:border-blue-500/20">
-      <div className="flex items-start justify-between mb-3">
-        <h3 className="text-lg font-bold text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors">{gig.title}</h3>
-        <span className={`badge-${gig.status} ml-2 flex-shrink-0`}>
+    <div className="bg-white rounded-xl border border-slate-200 p-5 h-full flex flex-col hover:border-blue-200 hover:shadow-md transition-all duration-150 cursor-pointer">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <h3 className="text-sm font-medium text-slate-900 line-clamp-2 leading-snug">{gig.title}</h3>
+        <span className={`badge-${gig.status} flex-shrink-0 text-xs`}>
           {gig.status.charAt(0).toUpperCase() + gig.status.slice(1)}
         </span>
       </div>
 
-      <p className="text-slate-600 text-sm line-clamp-3 flex-grow mb-4">{gig.description}</p>
+      <p className="text-sm text-slate-500 line-clamp-3 flex-grow mb-4 leading-relaxed">{gig.description}</p>
 
-      <div className="flex items-center justify-between pt-4 border-t-2 border-slate-100 group-hover:border-blue-100 transition-colors">
-        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">₹{gig.budget}</span>
-        <span className="text-sm text-slate-500 font-medium">
+      <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+        <span className="text-base font-semibold text-blue-600">${gig.budget}</span>
+        <span className="text-xs text-slate-400">
           by {gig.ownerId?.name || 'Unknown'}
         </span>
       </div>
